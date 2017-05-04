@@ -6,6 +6,7 @@ function preload() {
     //joku resize tehtävä
     game.load.image('arrow', 'assets/arrow.png');
     game.load.image('target', 'assets/target.png');
+    game.load.image('hit', 'assets/hit.png');
 }
 
 var timer = 0;
@@ -84,3 +85,63 @@ function update() {
 function render() {
     
 }
+
+$(document).keydown(function(e) {
+    switch(e.which) {
+        case 37: 
+            leftArrow = game.add.sprite(200, 570, 'hit');
+            leftArrow.scale.setTo(0.2, 0.2);
+            leftArrow.rotation += 4.7;
+        break;
+
+        case 38: 
+            upArrow = game.add.sprite(350, 510, 'hit');
+            upArrow.scale.setTo(0.2, 0.2);
+        break;
+
+        case 39:
+            rightArrow = game.add.sprite(700, 510, 'hit');
+            rightArrow.scale.setTo(0.2, 0.2);
+            rightArrow.rotation += 1.5;
+        break;
+
+        case 40: 
+            downArrow = game.add.sprite(550, 570, 'hit');
+            downArrow.scale.setTo(0.2, 0.2);
+            downArrow.rotation += 3.1;
+        break;
+
+        default: return; // exit this handler for other keys
+    }
+    e.preventDefault(); // prevent the default action (scroll / move caret)
+});
+
+$(document).keyup(function(e) {
+    switch(e.which) {
+        case 37: // left
+        leftArrow = game.add.sprite(200, 570, 'arrow');
+        leftArrow.scale.setTo(0.2, 0.2);
+        leftArrow.rotation += 4.7;
+        break;
+
+        case 38:
+            upArrow = game.add.sprite(350, 510, 'arrow');
+            upArrow.scale.setTo(0.2, 0.2);
+        break;
+
+        case 39:
+            rightArrow = game.add.sprite(700, 510, 'arrow');
+            rightArrow.scale.setTo(0.2, 0.2);
+            rightArrow.rotation += 1.5;
+        break;
+
+        case 40: 
+            downArrow = game.add.sprite(550, 570, 'arrow');
+            downArrow.scale.setTo(0.2, 0.2);
+            downArrow.rotation += 3.1;
+        break;
+
+        default: return; // exit this handler for other keys
+    }
+    e.preventDefault(); // prevent the default action (scroll / move caret)
+});

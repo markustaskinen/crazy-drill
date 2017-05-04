@@ -5,38 +5,79 @@ function preload() {
     //kuva alarivillä näkyville nuolille joita kohteet lähestyvät(liian isot atm)
     //joku resize tehtävä
     game.load.image('arrow', 'assets/arrow.png');
-
+    game.load.image('target', 'assets/target.png');
 }
+
+var timer = 0;
+var randomInteger = 0;
 
 var leftArrow;
 var upArrow;
 var downArrow;
 var rightArrow;
 
+var leftTarget;
+var upTarget;
+var downTarget;
+var rightTarget;
+
+function getRandomInteger(min, max) {
+    randomInteger = Math.floor((Math.random() * max) + min);
+}
+
 function create() {
 
-    
     //nurkka josta kuva piirtyy ei ole sama atm = nihkeää
-    game.stage.backgroundColor = '#3e5f96';
+    //>>sijainnin tarkistus on vaikeeta!
+    //näiden sijainnit on nyt määritetty tän rotation härön mukaan /:
+    game.stage.backgroundColor = '#000000';
 
-    leftArrow = game.add.sprite(100, 400, 'arrow');
+    leftArrow = game.add.sprite(200, 570, 'arrow');
+    leftArrow.scale.setTo(0.2, 0.2);
     //leftArrow.pivot.x = 300; -- mitä pivot tekee?
     leftArrow.rotation += 4.7;
 
-    upArrow = game.add.sprite(600, 150, 'arrow');
+    upArrow = game.add.sprite(350, 510, 'arrow');
+    upArrow.scale.setTo(0.2, 0.2);
     //upArrow.pivot.y = 100;
 
-    downArrow = game.add.sprite(200, 450, 'arrow');
+    downArrow = game.add.sprite(550, 570, 'arrow');
+    downArrow.scale.setTo(0.2, 0.2);
     downArrow.rotation += 3.1;
 
-    rightArrow = game.add.sprite(600, 100, 'arrow');
+    rightArrow = game.add.sprite(700, 510, 'arrow');
+    rightArrow.scale.setTo(0.2, 0.2);
     rightArrow.rotation += 1.5;
+    
+    targets()
+}
 
+function targets() {
+    
+    //tähän pitäis suunnitella vielä random logiikka
+    //joku array tehtävä jossa säilöö ja poistaa näkyviä kohteita?
+    leftTarget = game.add.sprite(200, 0, 'target');
+    leftTarget.scale.setTo(0.2, 0.2);
+    leftTarget.rotation += 4.7;
+    
+    upTarget = game.add.sprite(350, -60, 'target');
+    upTarget.scale.setTo(0.2, 0.2);
+    
+    downTarget = game.add.sprite(550, 0, 'target');
+    downTarget.scale.setTo(0.2, 0.2);
+    downTarget.rotation += 3.1;
+    
+    rightTarget = game.add.sprite(700, -60, 'target');
+    rightTarget.scale.setTo(0.2, 0.2);
+    rightTarget.rotation += 1.5;
 }
 
 function update() {
 
-
+    leftTarget.y += 1;
+    upTarget.y += 1;
+    downTarget.y += 1;
+    rightTarget.y += 1;
 
 }
 

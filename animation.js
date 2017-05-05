@@ -7,6 +7,7 @@ function preload() {
     game.load.image('arrow', 'assets/arrow.png');
     game.load.image('target', 'assets/target.png');
     game.load.image('hit', 'assets/hit.png');
+    game.load.image('miss', 'assets/miss.png');
 }
 
 var timer = 0;
@@ -50,7 +51,7 @@ function create() {
     rightArrow.scale.setTo(0.2, 0.2);
     rightArrow.rotation += 1.5;
     
-    targets()
+    targets();
 }
 
 function targets() {
@@ -86,62 +87,89 @@ function render() {
     
 }
 
-$(document).keydown(function(e) {
-    switch(e.which) {
-        case 37: 
+$(document).keydown(function (e) {
+    switch (e.which) {
+    case 37:
+        if (leftTarget.y > 550 && leftTarget.y < 600) {
             leftArrow = game.add.sprite(200, 570, 'hit');
             leftArrow.scale.setTo(0.2, 0.2);
             leftArrow.rotation += 4.7;
+            leftTarget.y += 100;
+        } else {
+            leftArrow = game.add.sprite(200, 570, 'miss');
+            leftArrow.scale.setTo(0.2, 0.2);
+            leftArrow.rotation += 4.7;
+        }
         break;
 
-        case 38: 
+    case 38:
+        if (upTarget.y > 550 && upTarget.y < 600) {     
             upArrow = game.add.sprite(350, 510, 'hit');
             upArrow.scale.setTo(0.2, 0.2);
+            upTarget.y += 100;
+        } else {
+            upArrow = game.add.sprite(350, 510, 'miss');
+            upArrow.scale.setTo(0.2, 0.2); 
+        }
         break;
 
-        case 39:
+    case 39:
+        if (rightTarget.y > 550 && rightTarget.y < 600) {
             rightArrow = game.add.sprite(700, 510, 'hit');
             rightArrow.scale.setTo(0.2, 0.2);
             rightArrow.rotation += 1.5;
+            rightTarget.y += 100;
+        } else {
+            rightArrow = game.add.sprite(700, 510, 'miss');
+            rightArrow.scale.setTo(0.2, 0.2);
+            rightArrow.rotation += 1.5; 
+        }
         break;
 
-        case 40: 
+    case 40:
+        if (downTarget.y > 550 && downTarget.y < 600) {
             downArrow = game.add.sprite(550, 570, 'hit');
             downArrow.scale.setTo(0.2, 0.2);
             downArrow.rotation += 3.1;
+            downTarget.y += 100;
+        } else {
+            downArrow = game.add.sprite(550, 570, 'miss');
+            downArrow.scale.setTo(0.2, 0.2);
+            downArrow.rotation += 3.1; 
+        }
         break;
 
-        default: return; // exit this handler for other keys
+    default: return; // exit this handler for other keys
     }
     e.preventDefault(); // prevent the default action (scroll / move caret)
 });
 
-$(document).keyup(function(e) {
-    switch(e.which) {
-        case 37: // left
+$(document).keyup(function (e) {
+    switch (e.which) {
+    case 37: // left
         leftArrow = game.add.sprite(200, 570, 'arrow');
         leftArrow.scale.setTo(0.2, 0.2);
         leftArrow.rotation += 4.7;
         break;
 
-        case 38:
-            upArrow = game.add.sprite(350, 510, 'arrow');
-            upArrow.scale.setTo(0.2, 0.2);
+    case 38:
+        upArrow = game.add.sprite(350, 510, 'arrow');
+        upArrow.scale.setTo(0.2, 0.2);
         break;
 
-        case 39:
-            rightArrow = game.add.sprite(700, 510, 'arrow');
-            rightArrow.scale.setTo(0.2, 0.2);
-            rightArrow.rotation += 1.5;
+    case 39:
+        rightArrow = game.add.sprite(700, 510, 'arrow');
+        rightArrow.scale.setTo(0.2, 0.2);
+        rightArrow.rotation += 1.5;
         break;
 
-        case 40: 
-            downArrow = game.add.sprite(550, 570, 'arrow');
-            downArrow.scale.setTo(0.2, 0.2);
-            downArrow.rotation += 3.1;
+    case 40:
+        downArrow = game.add.sprite(550, 570, 'arrow');
+        downArrow.scale.setTo(0.2, 0.2);
+        downArrow.rotation += 3.1;
         break;
 
-        default: return; // exit this handler for other keys
+    default: return; // exit this handler for other keys
     }
     e.preventDefault(); // prevent the default action (scroll / move caret)
 });

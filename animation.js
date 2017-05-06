@@ -51,10 +51,10 @@ function create() {
     rightArrow.scale.setTo(0.2, 0.2);
     rightArrow.rotation += 1.5;
     
-    targets();
+    createTargets();
 }
 
-function targets() {
+function createTargets() {
     
     //tähän pitäis suunnitella vielä random logiikka
     //joku array tehtävä jossa säilöö ja poistaa näkyviä kohteita?
@@ -75,7 +75,7 @@ function targets() {
 }
 
 function update() {
-
+    
     leftTarget.y += 1;
     upTarget.y += 1;
     downTarget.y += 1;
@@ -103,7 +103,7 @@ $(document).keydown(function (e) {
         break;
 
     case 38:
-        if (upTarget.y > 550 && upTarget.y < 600) {     
+        if (upTarget.y > 490 && upTarget.y < 540) {     
             upArrow = game.add.sprite(350, 510, 'hit');
             upArrow.scale.setTo(0.2, 0.2);
             upTarget.y += 100;
@@ -114,7 +114,7 @@ $(document).keydown(function (e) {
         break;
 
     case 39:
-        if (rightTarget.y > 550 && rightTarget.y < 600) {
+        if (rightTarget.y > 490 && rightTarget.y < 540) {
             rightArrow = game.add.sprite(700, 510, 'hit');
             rightArrow.scale.setTo(0.2, 0.2);
             rightArrow.rotation += 1.5;

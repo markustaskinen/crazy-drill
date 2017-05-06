@@ -23,6 +23,11 @@ var upTarget;
 var downTarget;
 var rightTarget;
 
+var leftActive = false;
+var upActive = false;
+var downActive = false;
+var rightActive = false;
+
 function getRandomInteger(min, max) {
     randomInteger = Math.floor((Math.random() * max) + min);
 }
@@ -41,7 +46,6 @@ function create() {
 
     upArrow = game.add.sprite(350, 510, 'arrow');
     upArrow.scale.setTo(0.2, 0.2);
-    //upArrow.pivot.y = 100;
 
     downArrow = game.add.sprite(550, 570, 'arrow');
     downArrow.scale.setTo(0.2, 0.2);
@@ -52,6 +56,27 @@ function create() {
     rightArrow.rotation += 1.5;
     
     createTargets();
+    game.time.events.repeat(Phaser.Timer.SECOND * 2, 10, active, this);
+}
+
+function active() {
+    
+    getRandomInteger(0,4);
+    
+    switch (randomInteger) {
+        case 0:
+            leftActive = true;
+            break;
+        case 1:
+            upActive = true;
+            break;
+        case 2:
+            downActive = true;
+            break;
+        case 3: 
+            rightActive = true;
+            break;
+    }
 }
 
 function createTargets() {
@@ -76,10 +101,18 @@ function createTargets() {
 
 function update() {
     
-    leftTarget.y += 1;
-    upTarget.y += 1;
-    downTarget.y += 1;
-    rightTarget.y += 1;
+    if (leftActive) {
+        leftTarget.y += 1;
+    }
+    if (upActive) {
+        upTarget.y += 1;
+    }
+    if (downActive) {
+        downTarget.y += 1;
+    }
+    if (rightActive) {
+        rightTarget.y += 1;
+    }
 
 }
 

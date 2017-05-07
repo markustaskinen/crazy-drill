@@ -1,9 +1,6 @@
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'crazy-drill', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
-
-    //kuva alarivillä näkyville nuolille joita kohteet lähestyvät(liian isot atm)
-    //joku resize tehtävä
     game.load.image('arrow', 'assets/arrow.png');
     game.load.image('target', 'assets/target.png');
     game.load.image('hit', 'assets/hit.png');
@@ -31,6 +28,7 @@ var upActive = false;
 var downActive = false;
 var rightActive = false;
 
+var scoreText = undefined;
 function getRandomInteger(min, max) {
     randomInteger = Math.floor((Math.random() * max) + min);
 }
@@ -38,10 +36,10 @@ function getRandomInteger(min, max) {
 function createSprite(height, direction, sprite) {
   x = { left:leftColumn, up:leftColumn+t, down:leftColumn+t*2, right: leftColumn+t*3 }[direction];
   rotation = { up:0, down:tau/2, left:tau*3/4, right: tau/4 }[direction];
-  sprite = game.add.sprite(x, height, sprite);
+  sprite = game.add.image(x, height, sprite);
   sprite.scale.setTo(0.2, 0.2);
-  // pivot kertoo akselin jonka ympäri sprite pyörii, asetetaan se keskelle
-  // nuolta
+  // set the pivot point of the arrow, so that the arrow location does not
+  // change when rotated
   sprite.pivot.x = 150;
   sprite.pivot.y = 150;
   sprite.rotation += rotation;
@@ -56,8 +54,9 @@ function create() {
     targets['up'] = createSprite(targetHeight, 'up', 'target');
     targets['down'] = createSprite(targetHeight, 'down', 'target');
     targets['right'] = createSprite(targetHeight, 'right', 'target')
+    scoreText = game.add.text(10, 20, "Score " + score, {fill: "white"})
 
-    game.time.events.repeat(Phaser.Timer.SECOND, 20, active, this);
+    game.time.events.repeat(Phaser.Timer.SECOND/2, 50, active, this);
 }
 
 function active() {
@@ -81,20 +80,29 @@ function active() {
 }
 
 function createArrow(direction) {
+    // creates an arrow outside the screen
     height = -60;
     arrows[direction].push(createSprite(height, direction, 'arrow'));
+}
+
+function updateScore(amount) {
+  // adds the given amount to the score and updates the score text
+  score += amount;
+  scoreText.setText("Score " + score)
 }
 
 function update() {
   for (direction in arrows) {
     for ( var i=0; i < arrows[direction].length; i++ ) {
       arrows[direction][i].y += 3;
+      // if arrow has passed the target, it is considered dead
       if (arrows[direction][i].y >= targetHeight + hitMargin) {
         deadArrows.push(arrows[direction].splice(i, 1)[0]);
-        score -= 30;
+        updateScore(-10)
       }
     }
   }
+  // keep dead arrows moving until they are no longer visible
   for ( var i=0; i < deadArrows.length; i++ ) {
     deadArrows[i].y += 3;
     if (deadArrows[i].y > game.height+30) {
@@ -105,21 +113,21 @@ function update() {
 }
 
 function render() {
-
 }
 
 function handleKeyPress(direction) {
+  // the first arrow in the array is always the one closest to the target
   arrow = arrows[direction][0]
   // If the arrow is close enough to the target
-  if (arrow != undefined && arrow.y > targetHeight - hitMargin && arrow.y < targetHeight + hitMargin) {
+  if (typeof arrow !== 'undefined' && arrow.y > targetHeight - hitMargin && arrow.y < targetHeight + hitMargin) {
     targets[direction].loadTexture('hit');
     arrow.y = 1000
     arrow.destroy()
     arrows[direction].shift()
-    score += 10;
-  } else { // if player missed the target
+    updateScore(10)
+  } else { // if player missed the arrow
     targets[direction].loadTexture('miss');
-    score -= 30;
+    updateScore(-10)
   }
 }
 

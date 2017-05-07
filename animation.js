@@ -20,14 +20,11 @@ var leftColumn = 250;
 var hitMargin = 30;
 var targetHeight = 540;
 
-
-var leftArrow;
-var upArrow;
-var downArrow;
-var rightArrow;
+var score = 0;
 
 var targets = {};
 var arrows = { up:[], down:[], left:[], right:[] };
+var deadArrows = [];
 
 var leftActive = false;
 var upActive = false;
@@ -55,12 +52,12 @@ function create() {
 
     game.stage.backgroundColor = '#000000';
 
-    targets['left'] = createSprite(targetHeight, 'left', 'arrow');
-    targets['up'] = createSprite(targetHeight, 'up', 'arrow');
-    targets['down'] = createSprite(targetHeight, 'down', 'arrow');
-    targets['right'] = createSprite(targetHeight, 'right', 'arrow')
+    targets['left'] = createSprite(targetHeight, 'left', 'target');
+    targets['up'] = createSprite(targetHeight, 'up', 'target');
+    targets['down'] = createSprite(targetHeight, 'down', 'target');
+    targets['right'] = createSprite(targetHeight, 'right', 'target')
 
-    game.time.events.repeat(Phaser.Timer.SECOND * 2, 10, active, this);
+    game.time.events.repeat(Phaser.Timer.SECOND, 20, active, this);
 }
 
 function active() {
@@ -85,15 +82,26 @@ function active() {
 
 function createArrow(direction) {
     height = -60;
-    arrows[direction].push(createSprite(height, direction, 'target'));
+    arrows[direction].push(createSprite(height, direction, 'arrow'));
 }
 
 function update() {
   for (direction in arrows) {
     for ( var i=0; i < arrows[direction].length; i++ ) {
       arrows[direction][i].y += 1;
+      if (arrows[direction][i].y >= targetHeight + hitMargin) {
+        deadArrows.push(arrows[direction].splice(i, 1)[0]);
+        score -= 30;
+      }
     }
   }
+  for ( var i=0; i < deadArrows.length; i++ ) {
+    deadArrows[i].y += 1;
+    if (deadArrows[i].y > game.height+30) {
+      deadArrows.splice(i, 1)[0].destroy();
+    }
+  }
+
 }
 
 function render() {
@@ -103,13 +111,15 @@ function render() {
 function handleKeyPress(direction) {
   arrow = arrows[direction][0]
   // If the arrow is close enough to the target
-  if (arrow.y > targetHeight - hitMargin && arrow.y < targetHeight + hitMargin) {
+  if (arrow != undefined && arrow.y > targetHeight - hitMargin && arrow.y < targetHeight + hitMargin) {
     targets[direction].loadTexture('hit');
     arrow.y = 1000
     arrow.destroy()
     arrows[direction].shift()
+    score += 10;
   } else { // if player missed the target
     targets[direction].loadTexture('miss');
+    score -= 30;
   }
 }
 
@@ -138,19 +148,19 @@ $(document).keydown(function (e) {
 $(document).keyup(function (e) {
     switch (e.which) {
     case 37: // left
-        targets['left'].loadTexture('arrow');
+        targets['left'].loadTexture('target');
         break;
 
     case 38:
-        targets['up'].loadTexture('arrow');
+        targets['up'].loadTexture('target');
         break;
 
     case 39:
-        targets['right'].loadTexture('arrow');
+        targets['right'].loadTexture('target');
         break;
 
     case 40:
-        targets['down'].loadTexture('arrow');
+        targets['down'].loadTexture('target');
         break;
 
     default: return; // exit this handler for other keys

@@ -26,10 +26,8 @@ var upArrow;
 var downArrow;
 var rightArrow;
 
-var leftTarget;
-var upTarget;
-var downTarget;
-var rightTarget;
+var targets = {};
+var arrows = { up:[], down:[], left:[], right:[] };
 
 var leftActive = false;
 var upActive = false;
@@ -57,13 +55,11 @@ function create() {
 
     game.stage.backgroundColor = '#000000';
 
+    targets['left'] = createSprite(targetHeight, 'left', 'arrow');
+    targets['up'] = createSprite(targetHeight, 'up', 'arrow');
+    targets['down'] = createSprite(targetHeight, 'down', 'arrow');
+    targets['right'] = createSprite(targetHeight, 'right', 'arrow')
 
-    leftArrow = createSprite(targetHeight, 'left', 'arrow');
-    upArrow = createSprite(targetHeight, 'up', 'arrow');
-    downArrow = createSprite(targetHeight, 'down', 'arrow');
-    rightArrow = createSprite(targetHeight, 'right', 'arrow')
-
-    createTargets();
     game.time.events.repeat(Phaser.Timer.SECOND * 2, 10, active, this);
 }
 
@@ -73,91 +69,67 @@ function active() {
 
     switch (randomInteger) {
         case 0:
-            leftActive = true;
+            createArrow('left');
             break;
         case 1:
-            upActive = true;
+            createArrow('up');
             break;
         case 2:
-            downActive = true;
+            createArrow('down');
             break;
         case 3:
-            rightActive = true;
+            createArrow('right');
             break;
     }
 }
 
-function createTargets() {
-
-    //tähän pitäis suunnitella vielä random logiikka
-    //joku array tehtävä jossa säilöö ja poistaa näkyviä kohteita?
+function createArrow(direction) {
     height = -60;
-
-    leftTarget = createSprite(height, 'left', 'target');
-    upTarget = createSprite(height, 'up', 'target');
-    downTarget = createSprite(height, 'down', 'target');
-    rightTarget = createSprite(height, 'right', 'target');
+    arrows[direction].push(createSprite(height, direction, 'target'));
 }
 
 function update() {
-
-    if (leftActive) {
-        leftTarget.y += 1;
+  for (direction in arrows) {
+    for ( var i=0; i < arrows[direction].length; i++ ) {
+      arrows[direction][i].y += 1;
     }
-    if (upActive) {
-        upTarget.y += 1;
-    }
-    if (downActive) {
-        downTarget.y += 1;
-    }
-    if (rightActive) {
-        rightTarget.y += 1;
-    }
-
+  }
 }
 
 function render() {
 
 }
 
+function handleKeyPress(direction) {
+  arrow = arrows[direction][0]
+  // If the arrow is close enough to the target
+  if (arrow.y > targetHeight - hitMargin && arrow.y < targetHeight + hitMargin) {
+    targets[direction].loadTexture('hit');
+    arrow.y = 1000
+    arrow.destroy()
+    arrows[direction].shift()
+  } else { // if player missed the target
+    targets[direction].loadTexture('miss');
+  }
+}
+
 $(document).keydown(function (e) {
     switch (e.which) {
     case 37:
-        if (leftTarget.y > targetHeight - hitMargin && leftTarget.y < targetHeight + hitMargin) {
-            leftArrow = createSprite(targetHeight, 'left', 'hit');
-            leftTarget.y += 100;
-        } else {
-            leftArrow = createSprite(targetHeight, 'left', 'miss');
-        }
-        break;
+      handleKeyPress('left')
+      break;
 
     case 38:
-        if (upTarget.y > targetHeight - hitMargin && upTarget.y < targetHeight + hitMargin) {
-            upArrow = createSprite(targetHeight, 'up', 'hit');
-            upTarget.y += 100;
-        } else {
-            upArrow = createSprite(targetHeight, 'up', 'miss');
-        }
-        break;
+      handleKeyPress('up')
+      break;
 
     case 39:
-        if (rightTarget.y > targetHeight - hitMargin && rightTarget.y < targetHeight + hitMargin) {
-            rightArrow = createSprite(targetHeight, 'right', 'hit');
-            rightTarget.y += 100;
-        } else {
-            rightArrow = createSprite(targetHeight, 'right', 'miss');
-        }
-        break;
+      handleKeyPress('right')
+      break;
 
     case 40:
-        if (downTarget.y > targetHeight - hitMargin && downTarget.y < targetHeight + hitMargin) {
-            downArrow = createSprite(targetHeight, 'down', 'hit');
-            downTarget.y += 100;
-        } else {
-            downArrow = createSprite(targetHeight, 'down', 'miss');;
-        }
-        break;
-
+      handleKeyPress('down')
+      break;
     default: return; // exit this handler for other keys
     }
     e.preventDefault(); // prevent the default action (scroll / move caret)
@@ -166,19 +138,19 @@ $(document).keydown(function (e) {
 $(document).keyup(function (e) {
     switch (e.which) {
     case 37: // left
-        leftArrow = createSprite(targetHeight, 'left', 'arrow');
+        targets['left'].loadTexture('arrow');
         break;
 
     case 38:
-        upArrow = createSprite(targetHeight, 'up', 'arrow');
+        targets['up'].loadTexture('arrow');
         break;
 
     case 39:
-        rightArrow = createSprite(targetHeight, 'right', 'arrow');
+        targets['right'].loadTexture('arrow');
         break;
 
     case 40:
-        downArrow = createSprite(targetHeight, 'down', 'arrow');
+        targets['down'].loadTexture('arrow');
         break;
 
     default: return; // exit this handler for other keys

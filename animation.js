@@ -14,6 +14,13 @@ var timer = 0;
 var randomInteger = 0;
 var tau = Math.PI*2
 
+var t = 150;
+var left = 250;
+var leftColumn = 250;
+var hitMargin = 30;
+var targetHeight = 540;
+
+
 var leftArrow;
 var upArrow;
 var downArrow;
@@ -33,37 +40,37 @@ function getRandomInteger(min, max) {
     randomInteger = Math.floor((Math.random() * max) + min);
 }
 
+function createSprite(height, direction, sprite) {
+  x = { left:leftColumn, up:leftColumn+t, down:leftColumn+t*2, right: leftColumn+t*3 }[direction];
+  rotation = { up:0, down:tau/2, left:tau*3/4, right: tau/4 }[direction];
+  sprite = game.add.sprite(x, height, sprite);
+  sprite.scale.setTo(0.2, 0.2);
+  // pivot kertoo akselin jonka ympäri sprite pyörii, asetetaan se keskelle
+  // nuolta
+  sprite.pivot.x = 150;
+  sprite.pivot.y = 150;
+  sprite.rotation += rotation;
+  return sprite
+}
+
 function create() {
 
-    //nurkka josta kuva piirtyy ei ole sama atm = nihkeää
-    //>>sijainnin tarkistus on vaikeeta!
-    //näiden sijainnit on nyt määritetty tän rotation härön mukaan /:
     game.stage.backgroundColor = '#000000';
 
-    leftArrow = game.add.sprite(200, 570, 'arrow');
-    leftArrow.scale.setTo(0.2, 0.2);
-    //leftArrow.pivot.x = 300; -- mitä pivot tekee?
-    leftArrow.rotation += tau*3/4;
 
-    upArrow = game.add.sprite(350, 510, 'arrow');
-    upArrow.scale.setTo(0.2, 0.2);
+    leftArrow = createSprite(targetHeight, 'left', 'arrow');
+    upArrow = createSprite(targetHeight, 'up', 'arrow');
+    downArrow = createSprite(targetHeight, 'down', 'arrow');
+    rightArrow = createSprite(targetHeight, 'right', 'arrow')
 
-    downArrow = game.add.sprite(550, 570, 'arrow');
-    downArrow.scale.setTo(0.2, 0.2);
-    downArrow.rotation += tau/2;
-
-    rightArrow = game.add.sprite(700, 510, 'arrow');
-    rightArrow.scale.setTo(0.2, 0.2);
-    rightArrow.rotation += tau/4;
-    
     createTargets();
     game.time.events.repeat(Phaser.Timer.SECOND * 2, 10, active, this);
 }
 
 function active() {
-    
+
     getRandomInteger(0,4);
-    
+
     switch (randomInteger) {
         case 0:
             leftActive = true;
@@ -74,34 +81,26 @@ function active() {
         case 2:
             downActive = true;
             break;
-        case 3: 
+        case 3:
             rightActive = true;
             break;
     }
 }
 
 function createTargets() {
-    
+
     //tähän pitäis suunnitella vielä random logiikka
     //joku array tehtävä jossa säilöö ja poistaa näkyviä kohteita?
-    leftTarget = game.add.sprite(200, 0, 'target');
-    leftTarget.scale.setTo(0.2, 0.2);
-    leftTarget.rotation += tau*3/4;
-    
-    upTarget = game.add.sprite(350, -60, 'target');
-    upTarget.scale.setTo(0.2, 0.2);
-    
-    downTarget = game.add.sprite(550, 0, 'target');
-    downTarget.scale.setTo(0.2, 0.2);
-    downTarget.rotation += tau/2;
-    
-    rightTarget = game.add.sprite(700, -60, 'target');
-    rightTarget.scale.setTo(0.2, 0.2);
-    rightTarget.rotation += tau/4;
+    height = -60;
+
+    leftTarget = createSprite(height, 'left', 'target');
+    upTarget = createSprite(height, 'up', 'target');
+    downTarget = createSprite(height, 'down', 'target');
+    rightTarget = createSprite(height, 'right', 'target');
 }
 
 function update() {
-    
+
     if (leftActive) {
         leftTarget.y += 1;
     }
@@ -118,58 +117,44 @@ function update() {
 }
 
 function render() {
-    
+
 }
 
 $(document).keydown(function (e) {
     switch (e.which) {
     case 37:
-        if (leftTarget.y > 550 && leftTarget.y < 600) {
-            leftArrow = game.add.sprite(200, 570, 'hit');
-            leftArrow.scale.setTo(0.2, 0.2);
-            leftArrow.rotation += tau*3/4;
+        if (leftTarget.y > targetHeight - hitMargin && leftTarget.y < targetHeight + hitMargin) {
+            leftArrow = createSprite(targetHeight, 'left', 'hit');
             leftTarget.y += 100;
         } else {
-            leftArrow = game.add.sprite(200, 570, 'miss');
-            leftArrow.scale.setTo(0.2, 0.2);
-            leftArrow.rotation += tau*3/4;
+            leftArrow = createSprite(targetHeight, 'left', 'miss');
         }
         break;
 
     case 38:
-        if (upTarget.y > 490 && upTarget.y < 540) {     
-            upArrow = game.add.sprite(350, 510, 'hit');
-            upArrow.scale.setTo(0.2, 0.2);
+        if (upTarget.y > targetHeight - hitMargin && upTarget.y < targetHeight + hitMargin) {
+            upArrow = createSprite(targetHeight, 'up', 'hit');
             upTarget.y += 100;
         } else {
-            upArrow = game.add.sprite(350, 510, 'miss');
-            upArrow.scale.setTo(0.2, 0.2); 
+            upArrow = createSprite(targetHeight, 'up', 'miss');
         }
         break;
 
     case 39:
-        if (rightTarget.y > 490 && rightTarget.y < 540) {
-            rightArrow = game.add.sprite(700, 510, 'hit');
-            rightArrow.scale.setTo(0.2, 0.2);
-            rightArrow.rotation += tau/4;
+        if (rightTarget.y > targetHeight - hitMargin && rightTarget.y < targetHeight + hitMargin) {
+            rightArrow = createSprite(targetHeight, 'right', 'hit');
             rightTarget.y += 100;
         } else {
-            rightArrow = game.add.sprite(700, 510, 'miss');
-            rightArrow.scale.setTo(0.2, 0.2);
-            rightArrow.rotation += tau/4; 
+            rightArrow = createSprite(targetHeight, 'right', 'miss');
         }
         break;
 
     case 40:
-        if (downTarget.y > 550 && downTarget.y < 600) {
-            downArrow = game.add.sprite(550, 570, 'hit');
-            downArrow.scale.setTo(0.2, 0.2);
-            downArrow.rotation += tau/2;
+        if (downTarget.y > targetHeight - hitMargin && downTarget.y < targetHeight + hitMargin) {
+            downArrow = createSprite(targetHeight, 'down', 'hit');
             downTarget.y += 100;
         } else {
-            downArrow = game.add.sprite(550, 570, 'miss');
-            downArrow.scale.setTo(0.2, 0.2);
-            downArrow.rotation += tau/2; 
+            downArrow = createSprite(targetHeight, 'down', 'miss');;
         }
         break;
 
@@ -181,26 +166,19 @@ $(document).keydown(function (e) {
 $(document).keyup(function (e) {
     switch (e.which) {
     case 37: // left
-        leftArrow = game.add.sprite(200, 570, 'arrow');
-        leftArrow.scale.setTo(0.2, 0.2);
-        leftArrow.rotation += tau*3/4;
+        leftArrow = createSprite(targetHeight, 'left', 'arrow');
         break;
 
     case 38:
-        upArrow = game.add.sprite(350, 510, 'arrow');
-        upArrow.scale.setTo(0.2, 0.2);
+        upArrow = createSprite(targetHeight, 'up', 'arrow');
         break;
 
     case 39:
-        rightArrow = game.add.sprite(700, 510, 'arrow');
-        rightArrow.scale.setTo(0.2, 0.2);
-        rightArrow.rotation += tau*1/4;
+        rightArrow = createSprite(targetHeight, 'right', 'arrow');
         break;
 
     case 40:
-        downArrow = game.add.sprite(550, 570, 'arrow');
-        downArrow.scale.setTo(0.2, 0.2);
-        downArrow.rotation += tau/2;
+        downArrow = createSprite(targetHeight, 'down', 'arrow');
         break;
 
     default: return; // exit this handler for other keys

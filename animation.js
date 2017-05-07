@@ -88,7 +88,7 @@ function createArrow(direction) {
 function update() {
   for (direction in arrows) {
     for ( var i=0; i < arrows[direction].length; i++ ) {
-      arrows[direction][i].y += 1;
+      arrows[direction][i].y += 3;
       if (arrows[direction][i].y >= targetHeight + hitMargin) {
         deadArrows.push(arrows[direction].splice(i, 1)[0]);
         score -= 30;
@@ -96,7 +96,7 @@ function update() {
     }
   }
   for ( var i=0; i < deadArrows.length; i++ ) {
-    deadArrows[i].y += 1;
+    deadArrows[i].y += 3;
     if (deadArrows[i].y > game.height+30) {
       deadArrows.splice(i, 1)[0].destroy();
     }

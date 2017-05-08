@@ -12,6 +12,8 @@ var timer = 0;
 var randomInteger = 0;
 var tau = Math.PI*2
 
+var gameLength = 100 // How many arrows to spawn until the game is over
+
 var t = 150;
 var left = 250;
 var leftColumn = 250;
@@ -19,17 +21,14 @@ var hitMargin = 30;
 var targetHeight = 540;
 
 var score = 0;
+var gameOver = false;
 
 var targets = {};
 var arrows = { up:[], down:[], left:[], right:[] };
 var deadArrows = [];
 
-var leftActive = false;
-var upActive = false;
-var downActive = false;
-var rightActive = false;
-
 var scoreText = undefined;
+var music = undefined;
 function getRandomInteger(min, max) {
     randomInteger = Math.floor((Math.random() * max) + min);
 }
@@ -51,7 +50,7 @@ function create() {
 
     game.stage.backgroundColor = '#000000';
 
-    var music = game.add.audio('background');
+    music = game.add.audio('background');
     music.play();
 
     targets['left'] = createSprite(targetHeight, 'left', 'target');
@@ -60,8 +59,16 @@ function create() {
     targets['right'] = createSprite(targetHeight, 'right', 'target')
     scoreText = game.add.text(10, 20, "Score " + score, {fill: "white"})
 
-    game.time.events.repeat(Phaser.Timer.SECOND*3/4, 50, active, this);
+    game.time.events.repeat(Phaser.Timer.SECOND*3/4, gameLength, active, this);
+    game.time.events.add(Phaser.Timer.SECOND*3/4 * gameLength + Phaser.Timer.SECOND*5, endGame, this);
 }
+
+function endGame() {
+  music.stop()
+  scoreText.setText("Game over! \nYour score was " + score)
+  gameOver = true;
+}
+
 
 function active() {
 
@@ -121,6 +128,7 @@ function render() {
 
 function handleKeyPress(direction) {
   // the first arrow in the array is always the one closest to the target
+  if (gameOver) {return} // if game has ended, do nothing
   arrow = arrows[direction][0]
   // If the arrow is close enough to the target
   if (typeof arrow !== 'undefined' && arrow.y > targetHeight - hitMargin && arrow.y < targetHeight + hitMargin) {

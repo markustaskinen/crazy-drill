@@ -5,6 +5,7 @@ function preload() {
     game.load.image('target', 'assets/target.png');
     game.load.image('hit', 'assets/hit.png');
     game.load.image('miss', 'assets/miss.png');
+    game.load.image('ground', 'assets/ground.png');
     game.load.audio('background', ['assets/Vicious.mp3', 'assets/Vicious.ogg']);
 }
 
@@ -19,6 +20,7 @@ var left = 250;
 var leftColumn = 250;
 var hitMargin = 30;
 var targetHeight = 540;
+var ground;
 
 var score = 0;
 var gameOver = false;
@@ -47,8 +49,9 @@ function createSprite(height, direction, sprite) {
 }
 
 function create() {
-
-    game.stage.backgroundColor = '#000000';
+    
+    ground = game.add.tileSprite(0, 0, 800, 600, 'ground');
+    //game.stage.backgroundColor = '#000000';
 
     music = game.add.audio('background');
     music.play();
@@ -103,6 +106,11 @@ function updateScore(amount) {
 }
 
 function update() {
+    
+    if (!gameOver) {
+        ground.tilePosition.y -= 2;
+    }
+    
   for (direction in arrows) {
     for ( var i=0; i < arrows[direction].length; i++ ) {
       arrows[direction][i].y += 3;

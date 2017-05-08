@@ -5,6 +5,7 @@ function preload() {
     game.load.image('target', 'assets/target.png');
     game.load.image('hit', 'assets/hit.png');
     game.load.image('miss', 'assets/miss.png');
+    game.load.audio('background', ['assets/Vicious.mp3', 'assets/Vicious.ogg']);
 }
 
 var timer = 0;
@@ -50,13 +51,16 @@ function create() {
 
     game.stage.backgroundColor = '#000000';
 
+    var music = game.add.audio('background');
+    music.play();
+
     targets['left'] = createSprite(targetHeight, 'left', 'target');
     targets['up'] = createSprite(targetHeight, 'up', 'target');
     targets['down'] = createSprite(targetHeight, 'down', 'target');
     targets['right'] = createSprite(targetHeight, 'right', 'target')
     scoreText = game.add.text(10, 20, "Score " + score, {fill: "white"})
 
-    game.time.events.repeat(Phaser.Timer.SECOND/2, 50, active, this);
+    game.time.events.repeat(Phaser.Timer.SECOND*3/4, 50, active, this);
 }
 
 function active() {

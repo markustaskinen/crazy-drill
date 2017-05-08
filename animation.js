@@ -66,7 +66,7 @@ function create() {
     targets['up'] = createSprite(targetHeight, 'up', 'target');
     targets['down'] = createSprite(targetHeight, 'down', 'target');
     targets['right'] = createSprite(targetHeight, 'right', 'target')
-    scoreText = game.add.text(10, 20, "Score " + score, {fill: "white"})
+    //scoreText = game.add.text(10, 20, "Score " + score, {fill: "white"})
     drill = game.add.sprite(70, drillPos, 'drill');
     startGame();
 }
@@ -74,7 +74,6 @@ function create() {
 function startGame() {
   gameOver = false;
   score = 0;
-  updateScore(0);
   music.play();
   game.time.events.repeat(Phaser.Timer.SECOND*3/4, gameLength, active, this);
   game.time.events.add(Phaser.Timer.SECOND*3/4 * gameLength + Phaser.Timer.SECOND*5, endGame, this);

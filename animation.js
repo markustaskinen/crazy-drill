@@ -10,14 +10,14 @@ function preload() {
     game.load.image('miss', basedir + '/assets/miss.png');
     game.load.image('ground', basedir + '/assets/ground.png');
     game.load.audio('background', [ basedir + '/assets/Vicious.mp3', basedir + '/assets/Vicious.ogg']);
-
+    game.load.spritesheet('button', 'assets/button.png', 500, 400);
 }
 
 var timer = 0;
 var randomInteger = 0;
 var tau = Math.PI*2
 
-var gameLength = 100 // How many arrows to spawn until the game is over
+var gameLength = 1 // How many arrows to spawn until the game is over
 
 var t = 150;
 var left = 250;
@@ -70,12 +70,18 @@ function create() {
     game.time.events.add(Phaser.Timer.SECOND*3/4 * gameLength + Phaser.Timer.SECOND*5, endGame, this);
 }
 
+var button;
+
 function endGame() {
   music.stop()
   scoreText.setText("Game over! \nYour score was " + score)
   gameOver = true;
+  button = game.add.button(game.world.centerX - 95, 300, 'button', actionOnClick, this, 2, 1, 0);
 }
 
+function actionOnClick () {
+    
+}
 
 function active() {
 

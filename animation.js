@@ -100,7 +100,7 @@ function createArrow(direction) {
 
 function updateScore(amount) {
   // adds the given amount to the score and updates the score text
-  score += amount;
+  score = Math.max(score + amount, 0);
   scoreText.setText("Score " + score)
 }
 

@@ -18,7 +18,7 @@ var timer = 0;
 var randomInteger = 0;
 var tau = Math.PI*2
 
-var gameLength = 100 // How many arrows to spawn until the game is over
+var gameLength = 1 // How many arrows to spawn until the game is over
 
 var t = 150;
 var left = 250;
@@ -75,6 +75,7 @@ function startGame() {
   gameOver = false;
   score = 0;
   updateScore(0);
+  drillPos = 80;
   music.play();
   game.time.events.repeat(Phaser.Timer.SECOND*3/4, gameLength, active, this);
   game.time.events.add(Phaser.Timer.SECOND*3/4 * gameLength + Phaser.Timer.SECOND*5, endGame, this);

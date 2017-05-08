@@ -8,7 +8,7 @@ function preload() {
     game.load.image('target', basedir + '/assets/target.png');
     game.load.image('hit', basedir + '/assets/hit.png');
     game.load.image('miss', basedir + '/assets/miss.png');
-    game.load.image('ground', basedir + 'assets/ground.png');
+    game.load.image('ground', basedir + '/assets/ground.png');
     game.load.audio('background', [ basedir + '/assets/Vicious.mp3', basedir + '/assets/Vicious.ogg']);
 
 }

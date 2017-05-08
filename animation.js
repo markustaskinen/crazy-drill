@@ -10,7 +10,7 @@ function preload() {
     game.load.image('miss', basedir + '/assets/miss.png');
     game.load.image('ground', basedir + '/assets/ground.png');
     game.load.audio('background', [ basedir + '/assets/Vicious.mp3', basedir + '/assets/Vicious.ogg']);
-    game.load.spritesheet('button', 'assets/button.png', 500, 400);
+    game.load.spritesheet('button', basedir + '/assets/button.png', 500, 400);
 }
 
 var timer = 0;
@@ -33,8 +33,11 @@ var targets = {};
 var arrows = { up:[], down:[], left:[], right:[] };
 var deadArrows = [];
 
-var scoreText = undefined;
-var music = undefined;
+var scoreText;
+var music;
+var button;
+var buttonText;
+
 function getRandomInteger(min, max) {
     randomInteger = Math.floor((Math.random() * max) + min);
 }
@@ -53,35 +56,37 @@ function createSprite(height, direction, sprite) {
 }
 
 function create() {
-    
     ground = game.add.tileSprite(0, 0, 800, 600, 'ground');
-    //game.stage.backgroundColor = '#000000';
-
     music = game.add.audio('background');
-    music.play();
-
+    scoreText = game.add.text(10, 20, "Score " + score, {fill: "white"});
     targets['left'] = createSprite(targetHeight, 'left', 'target');
     targets['up'] = createSprite(targetHeight, 'up', 'target');
     targets['down'] = createSprite(targetHeight, 'down', 'target');
-    targets['right'] = createSprite(targetHeight, 'right', 'target')
-    scoreText = game.add.text(10, 20, "Score " + score, {fill: "white"})
-
-    game.time.events.repeat(Phaser.Timer.SECOND*3/4, gameLength, active, this);
-    game.time.events.add(Phaser.Timer.SECOND*3/4 * gameLength + Phaser.Timer.SECOND*5, endGame, this);
+    targets['right'] = createSprite(targetHeight, 'right', 'target');
+    startGame();
 }
 
-var button;
+function startGame() {
+  gameOver = false;
+  score = 0;
+  updateScore(0);
+  music.play();
+  game.time.events.repeat(Phaser.Timer.SECOND*3/4, gameLength, active, this);
+  game.time.events.add(Phaser.Timer.SECOND*3/4 * gameLength + Phaser.Timer.SECOND*5, endGame, this);
+}
 
 function endGame() {
   music.stop()
   scoreText.setText("Game over! \nYour score was " + score)
   gameOver = true;
   button = game.add.button(game.world.centerX - 95, 300, 'button', actionOnClick, this, 2, 1, 0);
-  game.add.text(335, 335, "play again");
+  buttonText = game.add.text(335, 335, "Play again");
 }
 
 function actionOnClick () {
-    
+  button.destroy()
+  buttonText.destroy()
+  startGame();
 }
 
 function active() {
@@ -117,11 +122,11 @@ function updateScore(amount) {
 }
 
 function update() {
-    
+
     if (!gameOver) {
         ground.tilePosition.y -= 2;
     }
-    
+
   for (direction in arrows) {
     for ( var i=0; i < arrows[direction].length; i++ ) {
       arrows[direction][i].y += 3;

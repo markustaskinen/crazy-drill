@@ -76,6 +76,8 @@ function startGame() {
   score = 0;
   updateScore(0);
   drillPos = 80;
+  updateDrill(0);
+
   music.play();
   game.time.events.repeat(Phaser.Timer.SECOND*3/4, gameLength, active, this);
   game.time.events.add(Phaser.Timer.SECOND*3/4 * gameLength + Phaser.Timer.SECOND*5, endGame, this);

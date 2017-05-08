@@ -9,6 +9,7 @@ function preload() {
     game.load.image('hit', basedir + '/assets/hit.png');
     game.load.image('miss', basedir + '/assets/miss.png');
     game.load.image('ground', basedir + '/assets/ground.png');
+    game.load.image('drill', basedir + '/assets/drill.png');
     game.load.audio('background', [ basedir + '/assets/Vicious.mp3', basedir + '/assets/Vicious.ogg']);
     game.load.spritesheet('button', basedir + '/assets/button.png', 500, 400);
 }
@@ -24,14 +25,16 @@ var left = 250;
 var leftColumn = 250;
 var hitMargin = 30;
 var targetHeight = 540;
-var ground;
 
 var score = 0;
+var drillPos = 80;
 var gameOver = false;
 
 var targets = {};
 var arrows = { up:[], down:[], left:[], right:[] };
 var deadArrows = [];
+var ground;
+var drill;
 
 var scoreText;
 var music;
@@ -62,7 +65,9 @@ function create() {
     targets['left'] = createSprite(targetHeight, 'left', 'target');
     targets['up'] = createSprite(targetHeight, 'up', 'target');
     targets['down'] = createSprite(targetHeight, 'down', 'target');
-    targets['right'] = createSprite(targetHeight, 'right', 'target');
+    targets['right'] = createSprite(targetHeight, 'right', 'target')
+    scoreText = game.add.text(10, 20, "Score " + score, {fill: "white"})
+    drill = game.add.sprite(70, drillPos, 'drill');
     startGame();
 }
 
@@ -121,6 +126,11 @@ function updateScore(amount) {
   scoreText.setText("Score " + score)
 }
 
+function updateDrill(amount) {
+    drillPos = Math.min(Math.max(drillPos + amount, 80), 470);
+    drill.y = drillPos;
+}
+
 function update() {
 
     if (!gameOver) {
@@ -134,6 +144,7 @@ function update() {
       if (arrows[direction][i].y >= targetHeight + hitMargin) {
         deadArrows.push(arrows[direction].splice(i, 1)[0]);
         updateScore(-10)
+        updateDrill(-3)
       }
     }
   }
@@ -161,9 +172,11 @@ function handleKeyPress(direction) {
     arrow.destroy()
     arrows[direction].shift()
     updateScore(10)
+    updateDrill(3)
   } else { // if player missed the arrow
     targets[direction].loadTexture('miss');
     updateScore(-10)
+    updateDrill(-3)
   }
 }
 

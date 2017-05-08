@@ -18,7 +18,7 @@ var timer = 0;
 var randomInteger = 0;
 var tau = Math.PI*2
 
-var gameLength = 1 // How many arrows to spawn until the game is over
+var gameLength = 100 // How many arrows to spawn until the game is over
 
 var t = 150;
 var left = 250;

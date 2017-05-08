@@ -27,7 +27,9 @@ var hitMargin = 30;
 var targetHeight = 540;
 
 var score = 0;
-var drillPos = 80;
+var maxScore = gameLength*10
+var drillStartPos = 80;
+var drillEndPos = 470;
 var gameOver = false;
 
 var targets = {};
@@ -67,7 +69,7 @@ function create() {
     targets['down'] = createSprite(targetHeight, 'down', 'target');
     targets['right'] = createSprite(targetHeight, 'right', 'target')
     //scoreText = game.add.text(10, 20, "Score " + score, {fill: "white"})
-    drill = game.add.sprite(70, drillPos, 'drill');
+    drill = game.add.sprite(70, drillStartPos, 'drill');
     startGame();
 }
 
@@ -75,9 +77,6 @@ function startGame() {
   gameOver = false;
   score = 0;
   updateScore(0);
-  drillPos = 80;
-  updateDrill(0);
-
   music.play();
   game.time.events.repeat(Phaser.Timer.SECOND*3/4, gameLength, active, this);
   game.time.events.add(Phaser.Timer.SECOND*3/4 * gameLength + Phaser.Timer.SECOND*5, endGame, this);
@@ -126,11 +125,12 @@ function createArrow(direction) {
 function updateScore(amount) {
   // adds the given amount to the score and updates the score text
   score = Math.max(score + amount, 0);
+  updateDrill()
   scoreText.setText("Score " + score)
 }
 
-function updateDrill(amount) {
-    drillPos = Math.min(Math.max(drillPos + amount, 80), 470);
+function updateDrill() {
+    drillPos = drillStartPos + score/maxScore*(drillEndPos - drillStartPos)
     drill.y = drillPos;
 }
 
@@ -147,7 +147,6 @@ function update() {
       if (arrows[direction][i].y >= targetHeight + hitMargin) {
         deadArrows.push(arrows[direction].splice(i, 1)[0]);
         updateScore(-10)
-        updateDrill(-3)
       }
     }
   }
@@ -175,11 +174,9 @@ function handleKeyPress(direction) {
     arrow.destroy()
     arrows[direction].shift()
     updateScore(10)
-    updateDrill(3)
   } else { // if player missed the arrow
     targets[direction].loadTexture('miss');
     updateScore(-10)
-    updateDrill(-3)
   }
 }
 

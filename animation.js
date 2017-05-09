@@ -69,12 +69,12 @@ function createSprite(height, direction, sprite) {
 function startMenu() {
   scoreText.x = 10;
   updateScore(0)
-  button = game.add.button(game.world.centerX - 95, 300, 'button', onPlayButtonClick, this, 2, 1, 0);
-  buttonText = game.add.text(335, 335, "Aloita peli", {fill: "white"});
-  difficultyButton = game.add.button(game.world.centerX, 250, 'button', changeDifficulty, this, 2, 1, 0);
+  button = game.add.button(game.world.centerX - 25, 300, 'button', onPlayButtonClick, this, 2, 1, 0);
+  buttonText = game.add.text(410, 335, "Aloita peli", {fill: "white"});
+  difficultyButton = game.add.button(game.world.centerX + 75, 250, 'button', changeDifficulty, this, 2, 1, 0);
   difficultyButton.pivot.x = 99;
   difficultyButton.pivot.y = 50;
-  difficultyText = game.add.text(game.world.centerX - 50, 235, "", {fill: "white"});
+  difficultyText = game.add.text(game.world.centerX + 30, 235, "", {fill: "white"});
   helpText = game.add.text(game.world.centerX - 200, 50, helpString, {fill: "white"})
   updateDifficulty();
 }
@@ -131,11 +131,11 @@ function startGame() {
 
 function endGame() {
   music.stop();
-  scoreText.setText("Peli loppui! \nSait " + score+ " pistettä!");
-  scoreText.x = game.world.centerX - 95;
+  scoreText.setText("Peli loppui! \nPorasit " + score+ "m syvyyteen!");
+  scoreText.x = game.world.centerX - 40;
   gameOver = true;
-  button = game.add.button(game.world.centerX - 95, 300, 'button', onButtonClick, this, 2, 1, 0);
-  buttonText = game.add.text(335, 335, "Päävalikko", {fill: "white"});
+  button = game.add.button(game.world.centerX - 25, 300, 'button', onButtonClick, this, 2, 1, 0);
+  buttonText = game.add.text(410, 335, "Päävalikko", {fill: "white"});
 }
 
 function onButtonClick () {
@@ -171,7 +171,7 @@ function updateScore(amount) {
   // adds the given amount to the score and updates the score text
   score = Math.max(score + amount, 0);
   updateDrill()
-  scoreText.setText("Pisteet " + score)
+  scoreText.setText("Syvyys " + score + "m")
 }
 
 function updateDrill() {

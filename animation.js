@@ -45,6 +45,8 @@ var button;
 var buttonText;
 var difficultyButton;
 var difficultyText;
+var helpText;
+var helpString = "Syvemmältä maan uumenista saa paremmin \nlämpöä. Painele siis nuolinäppäimiä biisin \ntahtiin ja poraa niin syvälle kuin pystyt!";
 var difficulty = 0;
 
 function getRandomInteger(min, max) {
@@ -65,19 +67,16 @@ function createSprite(height, direction, sprite) {
 }
 
 function startMenu() {
+  scoreText.x = 10;
+  updateScore(0)
   button = game.add.button(game.world.centerX - 95, 300, 'button', onPlayButtonClick, this, 2, 1, 0);
-  buttonText = game.add.text(335, 335, "Start Game", {fill: "white"});
-  difficultyButton = game.add.button(game.world.centerX, 200, 'button', changeDifficulty, this, 2, 1, 0);
+  buttonText = game.add.text(335, 335, "Aloita peli", {fill: "white"});
+  difficultyButton = game.add.button(game.world.centerX, 250, 'button', changeDifficulty, this, 2, 1, 0);
   difficultyButton.pivot.x = 99;
   difficultyButton.pivot.y = 50;
-  difficultyButton.scale.setTo(1.2,1.2)
-  difficultyText = game.add.text(game.world.centerX - 95, 185, "Difficulty: ", {fill: "white"});
+  difficultyText = game.add.text(game.world.centerX - 50, 235, "", {fill: "white"});
+  helpText = game.add.text(game.world.centerX - 200, 50, helpString, {fill: "white"})
   updateDifficulty();
-}
-
-function helpScreen() {
-  button = game.add.button(game.world.centerX - 95, 300, 'button', onButtonClick, this, 2, 1, 0);
-  buttonText = game.add.text(335, 335, "Main menu", {fill: "white"});
 }
 
 function changeDifficulty() {
@@ -89,14 +88,14 @@ function changeDifficulty() {
 function updateDifficulty() {
   switch (difficulty) {
     case 0:
-      difficultyText.setText("Difficulty: Easy");
+      difficultyText.setText("Helppo");
       bpm = 160;
       gameLength = 200;
       arrowSpeed = 4;
       music = game.add.audio('background');
       break;
     case 1:
-      difficultyText.setText("Difficulty: Hard");
+      difficultyText.setText("Vaikea");
       music = game.add.audio('hard');
       arrowSpeed = 7;
       gameLength = 300;
@@ -109,7 +108,7 @@ function updateDifficulty() {
 
 function create() {
     ground = game.add.tileSprite(0, 0, 800, 600, 'ground');
-    scoreText = game.add.text(10, 20, "Score " + score, {fill: "white"});
+    scoreText = game.add.text(10, 20, "Pisteet " + score, {fill: "white"});
     targets['left'] = createSprite(targetHeight, 'left', 'target');
     targets['up'] = createSprite(targetHeight, 'up', 'target');
     targets['down'] = createSprite(targetHeight, 'down', 'target');
@@ -120,6 +119,7 @@ function create() {
 }
 
 function startGame() {
+  helpText.destroy();
   arrowInterval = Phaser.Timer.SECOND*60/bpm;
   gameOver = false;
   score = 0;
@@ -130,11 +130,12 @@ function startGame() {
 }
 
 function endGame() {
-  music.stop()
-  scoreText.setText("Game over! \nYour score was " + score)
+  music.stop();
+  scoreText.setText("Peli loppui! \nSait " + score+ " pistettä!");
+  scoreText.x = game.world.centerX - 95;
   gameOver = true;
   button = game.add.button(game.world.centerX - 95, 300, 'button', onButtonClick, this, 2, 1, 0);
-  buttonText = game.add.text(335, 335, "Main menu", {fill: "white"});
+  buttonText = game.add.text(335, 335, "Päävalikko", {fill: "white"});
 }
 
 function onButtonClick () {
@@ -170,7 +171,7 @@ function updateScore(amount) {
   // adds the given amount to the score and updates the score text
   score = Math.max(score + amount, 0);
   updateDrill()
-  scoreText.setText("Score " + score)
+  scoreText.setText("Pisteet " + score)
 }
 
 function updateDrill() {

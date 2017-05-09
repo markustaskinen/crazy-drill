@@ -19,7 +19,7 @@ var randomInteger = 0;
 var tau = Math.PI*2
 
 var gameLength = 200; // How many arrows to spawn until the game is over
-var arrowInterval = Phaser.Timer.SECOND*3/4*1/2;
+var bpm = 80; // Beats per minute
 var t = 150;
 var left = 250;
 var leftColumn = 250;
@@ -30,7 +30,7 @@ var score = 0;
 var maxScore = gameLength*10
 var drillStartPos = 80;
 var drillEndPos = 470;
-var gameOver = false;
+var gameOver = true;
 
 var targets = {};
 var arrows = { up:[], down:[], left:[], right:[] };
@@ -42,6 +42,9 @@ var scoreText;
 var music;
 var button;
 var buttonText;
+var difficultyButton;
+var difficultyText;
+var difficulty = 0;
 
 function getRandomInteger(min, max) {
     randomInteger = Math.floor((Math.random() * max) + min);
@@ -60,6 +63,36 @@ function createSprite(height, direction, sprite) {
   return sprite
 }
 
+function startMenu() {
+  button = game.add.button(game.world.centerX - 95, 300, 'button', onPlayButtonClick, this, 2, 1, 0);
+  buttonText = game.add.text(335, 335, "Start Game", {fill: "white"});
+  difficultyButton = game.add.button(game.world.centerX, 200, 'button', changeDifficulty, this, 2, 1, 0);
+  difficultyButton.pivot.x = 99;
+  difficultyButton.pivot.y = 50;
+  difficultyButton.scale.setTo(1.2,1.2)
+  difficultyText = game.add.text(game.world.centerX - 95, 185, "Difficulty: ", {fill: "white"});
+  updateDifficulty();
+}
+
+function changeDifficulty() {
+  difficulty ++;
+  difficulty = difficulty%2;
+  updateDifficulty();
+}
+
+function updateDifficulty() {
+  switch (difficulty) {
+    case 0:
+      difficultyText.setText("Difficulty: Easy");
+      bpm = 80;
+      break;
+    case 1:
+      difficultyText.setText("Difficulty: Hard");
+      bpm = 160;
+      break;
+  }
+}
+
 function create() {
     ground = game.add.tileSprite(0, 0, 800, 600, 'ground');
     music = game.add.audio('background');
@@ -69,10 +102,11 @@ function create() {
     targets['down'] = createSprite(targetHeight, 'down', 'target');
     targets['right'] = createSprite(targetHeight, 'right', 'target')
     drill = game.add.sprite(70, drillStartPos, 'drill');
-    startGame();
+    startMenu()
 }
 
 function startGame() {
+  arrowInterval = Phaser.Timer.SECOND*60/bpm;
   gameOver = false;
   score = 0;
   updateScore(0);
@@ -85,13 +119,21 @@ function endGame() {
   music.stop()
   scoreText.setText("Game over! \nYour score was " + score)
   gameOver = true;
-  button = game.add.button(game.world.centerX - 95, 300, 'button', actionOnClick, this, 2, 1, 0);
-  buttonText = game.add.text(335, 335, "Play again");
+  button = game.add.button(game.world.centerX - 95, 300, 'button', onButtonClick, this, 2, 1, 0);
+  buttonText = game.add.text(335, 335, "Menu", {fill: "white"});
 }
 
-function actionOnClick () {
+function onButtonClick () {
   button.destroy()
   buttonText.destroy()
+  startMenu();
+}
+
+function onPlayButtonClick () {
+  button.destroy()
+  buttonText.destroy()
+  difficultyButton.destroy()
+  difficultyText.destroy()
   startGame();
 }
 

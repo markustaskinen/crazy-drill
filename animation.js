@@ -29,7 +29,6 @@ var hitMargin = 30;
 var targetHeight = 540;
 
 var score = 0;
-var maxScore = gameLength*10
 var drillStartPos = 80;
 var drillEndPos = 470;
 var gameOver = true;
@@ -74,6 +73,11 @@ function startMenu() {
   difficultyButton.scale.setTo(1.2,1.2)
   difficultyText = game.add.text(game.world.centerX - 95, 185, "Difficulty: ", {fill: "white"});
   updateDifficulty();
+}
+
+function helpScreen() {
+  button = game.add.button(game.world.centerX - 95, 300, 'button', onButtonClick, this, 2, 1, 0);
+  buttonText = game.add.text(335, 335, "Main menu", {fill: "white"});
 }
 
 function changeDifficulty() {
@@ -170,6 +174,7 @@ function updateScore(amount) {
 }
 
 function updateDrill() {
+    var maxScore = gameLength*10
     drillPos = drillStartPos + score/maxScore*(drillEndPos - drillStartPos)
     drill.y = drillPos;
 }

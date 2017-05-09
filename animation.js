@@ -68,7 +68,6 @@ function create() {
     targets['up'] = createSprite(targetHeight, 'up', 'target');
     targets['down'] = createSprite(targetHeight, 'down', 'target');
     targets['right'] = createSprite(targetHeight, 'right', 'target')
-    //scoreText = game.add.text(10, 20, "Score " + score, {fill: "white"})
     drill = game.add.sprite(70, drillStartPos, 'drill');
     startGame();
 }
@@ -129,9 +128,15 @@ function updateScore(amount) {
   scoreText.setText("Score " + score)
 }
 
+
 function updateDrill() {
     drillPos = drillStartPos + score/maxScore*(drillEndPos - drillStartPos)
     drill.y = drillPos;
+    var graphics = game.add.graphics(110, 200);
+    graphics.beginFill(0xFF3300);
+    graphics.lineStyle(40, 0x996633, 0.8);
+    graphics.lineTo(0, drillPos - 80);
+    graphics.endFill();
 }
 
 function update() {

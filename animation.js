@@ -11,6 +11,7 @@ function preload() {
     game.load.image('ground', basedir + '/assets/ground.png');
     game.load.image('drill', basedir + '/assets/drill.png');
     game.load.audio('background', [ basedir + '/assets/Vicious.mp3', basedir + '/assets/Vicious.ogg']);
+    game.load.audio('hard', basedir + '/assets/Exit_the_premises.mp3');
     game.load.spritesheet('button', basedir + '/assets/button.png', 500, 400);
 }
 

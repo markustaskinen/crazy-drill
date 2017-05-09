@@ -111,7 +111,8 @@ function create() {
     targets['down'] = createSprite(targetHeight, 'down', 'target');
     targets['right'] = createSprite(targetHeight, 'right', 'target')
     drill = game.add.sprite(70, drillStartPos, 'drill');
-    startMenu()
+    drawThermometer();
+    startMenu();
 }
 
 function startGame() {
@@ -129,7 +130,7 @@ function endGame() {
   scoreText.setText("Game over! \nYour score was " + score)
   gameOver = true;
   button = game.add.button(game.world.centerX - 95, 300, 'button', onButtonClick, this, 2, 1, 0);
-  buttonText = game.add.text(335, 335, "Menu", {fill: "white"});
+  buttonText = game.add.text(335, 335, "Main menu", {fill: "white"});
 }
 
 function onButtonClick () {
@@ -152,9 +153,6 @@ function active() {
     notUsed.splice(randomInteger, 1)
     var secondRandomInteger = notUsed[getRandomInteger(0,3)];
     createArrow(randomInteger);
-    if (getRandomInteger(0,10) == 0) {
-      createArrow(secondRandomInteger);
-    }
 }
 
 function createArrow(direction) {
@@ -174,6 +172,15 @@ function updateScore(amount) {
 function updateDrill() {
     drillPos = drillStartPos + score/maxScore*(drillEndPos - drillStartPos)
     drill.y = drillPos;
+}
+
+function drawThermometer() {
+  var graphics = game.add.graphics(50, 100);
+  for (var i=3; i <= 483; i+=20) {
+    graphics.lineStyle(5, Phaser.Color.getColor(120+i/4,0,240-i/2), 1);
+    graphics.moveTo(3,i);
+    graphics.lineTo(30,i);
+  }
 }
 
 function update() {

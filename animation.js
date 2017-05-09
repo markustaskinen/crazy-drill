@@ -18,8 +18,8 @@ var timer = 0;
 var randomInteger = 0;
 var tau = Math.PI*2
 
-var gameLength = 100 // How many arrows to spawn until the game is over
-
+var gameLength = 200; // How many arrows to spawn until the game is over
+var arrowInterval = Phaser.Timer.SECOND*3/4*1/2;
 var t = 150;
 var left = 250;
 var leftColumn = 250;
@@ -77,8 +77,8 @@ function startGame() {
   score = 0;
   updateScore(0);
   music.play();
-  game.time.events.repeat(Phaser.Timer.SECOND*3/4, gameLength, active, this);
-  game.time.events.add(Phaser.Timer.SECOND*3/4 * gameLength + Phaser.Timer.SECOND*5, endGame, this);
+  game.time.events.repeat(arrowInterval, gameLength, active, this);
+  game.time.events.add(arrowInterval * gameLength + Phaser.Timer.SECOND*5, endGame, this);
 }
 
 function endGame() {
@@ -128,15 +128,9 @@ function updateScore(amount) {
   scoreText.setText("Score " + score)
 }
 
-
 function updateDrill() {
     drillPos = drillStartPos + score/maxScore*(drillEndPos - drillStartPos)
     drill.y = drillPos;
-    var graphics = game.add.graphics(110, 200);
-    graphics.beginFill(0xFF3300);
-    graphics.lineStyle(40, 0x996633, 0.8);
-    graphics.lineTo(0, drillPos - 80);
-    graphics.endFill();
 }
 
 function update() {
